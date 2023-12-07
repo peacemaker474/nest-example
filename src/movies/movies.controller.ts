@@ -11,7 +11,9 @@ import { MoviesService } from './movies.service';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('영화 API')
 @Controller('movies')
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
@@ -26,6 +28,8 @@ export class MoviesController {
     return this.moviesService.getOne(movieId);
   }
 
+  @ApiOperation({ summary: '영화 생성 API', description: '영화를 생성한다.' })
+  @ApiCreatedResponse({ description: '영화를 생성한다.', type: Movie })
   @Post()
   create(@Body() movieData: CreateMovieDto) {
     return this.moviesService.create(movieData);
@@ -36,6 +40,10 @@ export class MoviesController {
     return this.moviesService.deleteOne(movieId);
   }
 
+  @ApiOperation({
+    summary: '영화 수정 API',
+    description: '영화 정보를 수정하다.',
+  })
   @Patch('/:id')
   patchMovie(@Param('id') movieId: number, @Body() updateData: UpdateMovieDto) {
     return this.moviesService.update(movieId, updateData);
