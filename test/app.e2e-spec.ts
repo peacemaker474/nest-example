@@ -1,7 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+
+import { Test, TestingModule } from '@nestjs/testing';
+
 import { AppModule } from './../src/app.module';
+import { INestApplication } from '@nestjs/common';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -19,6 +21,27 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect('Welcome to my Movie API');
+  });
+
+  describe('/movies', () => {
+    it('GET', () => {
+      return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
+    });
+
+    it('POST', () => {
+      return request(app.getHttpServer())
+        .post('/movies')
+        .send({
+          title: 'Test Movies',
+          year: 2023,
+          genres: ['action'],
+        })
+        .expect(201);
+    });
+
+    it('DELETE', () => {
+      return request(app.getHttpServer()).delete('/movies').expect(404);
+    });
   });
 });
